@@ -8,15 +8,65 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var fetch = ApiService()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView{
+            VStack {
+                ForEach(fetch.datatotal) {data in
+                    // Kolom 1
+                    HStack{
+                        HStack{
+                            Spacer()
+                            VStack{
+                                Image(systemName: "hear.fill")
+                                    .foregroundColor(Color.white)
+                                Text("Sembuh")
+                                    .font(.headline)
+                                    .foregroundColor(Color.white)
+                                Text("\(data.jumlah_sembuh)")
+                                    .font(.headline)
+                                    .foregroundColor(Color.white)
+                                Spacer()
+                            }
+                            .frame(height: 100)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(20)
+                        }
+                    }
+                }
+                
+                if (fetch.isLoading) {
+                    VStack {
+                        Indicator()
+                        Text("Loading....")
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    .shadow(color: Color.secondary, radius: 20)
+                }
+            }
+            .navigationBarTitle("Covid 19 Data")
         }
-        .padding()
     }
+}
+
+
+// komponen indicator
+
+struct Indicator : UIViewRepresentable {
+    func makeUIView(context: UIViewRepresentableContext<Indicator>) -> UIActivityIndicatorView {
+        let indi = UIActivityIndicatorView(style: .large)
+        indi.color = UIColor.red
+        return indi
+    }
+    
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<Indicator>) {
+        uiView.startAnimating()
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
